@@ -88,6 +88,9 @@ export class IvansBedRockStack extends cdk.Stack {
 
     messageHandler.addToRolePolicy(apiGatewayManagementPolicy);
 
+    //Add additional permissions
+    
+
     // Output the WebSocket URL
     new cdk.CfnOutput(this, 'WebSocketURL', {
       value: stage.url,

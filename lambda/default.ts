@@ -1,3 +1,5 @@
+import * as cdk from 'aws-cdk-lib';
+
 type DefaultEvent = {
     body: string
 }

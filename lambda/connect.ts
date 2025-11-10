@@ -1,5 +1,6 @@
-const AWS = require('aws-sdk');
-const ddb = new AWS.DynamoDB.DocumentClient();
+import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+
+const ddb = new DynamoDBClient({});
 
 type ConnectEvent = {
     requestContext: {
@@ -27,16 +28,16 @@ type HandlerResponse = {
 exports.handler = async (event: ConnectEvent): Promise<HandlerResponse> => {
     const connectionId: string = event.requestContext.connectionId;
     
-    const putParams: PutParams = {
+    const putParams = {
         TableName: process.env.TABLE_NAME!,
         Item: {
-            connectionId: connectionId,
-            timestamp: Date.now(),
+            connectionId: { S: connectionId },
+            timestamp: { N: Date.now().toString() },
         },
     };
 
     try {
-        await (ddb.put(putParams).promise() as Promise<any>);
+        await ddb.send(new PutItemCommand(putParams));
         return { statusCode: 200, body: 'Connected.' };
     } catch (err: any) {
         console.error('Error:', err);
